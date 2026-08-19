@@ -77,6 +77,9 @@ export default function Dashboard() {
             <Link href="/pickitbros" className="text-red-400 hover:text-red-300 font-bold border-2 border-red-600 px-3 py-1 rounded">
               PickIt Bros
             </Link>
+            <Link href="/admin/picks" className="bg-yellow-600 text-white px-3 py-1 rounded font-bold hover:bg-yellow-700">
+              ⚙️ Admin
+            </Link>
             <Link href="/profile/edit" className="text-gray-300 hover:text-white font-bold">
               Profile
             </Link>

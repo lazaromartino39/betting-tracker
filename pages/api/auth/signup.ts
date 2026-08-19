@@ -28,13 +28,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     })
 
     const token = jwt.sign(
-      { userId: user.id, email: user.email },
+      { userId: String(user.id), email: user.email },
       process.env.JWT_SECRET || 'secret',
       { expiresIn: '7d' }
     )
 
     await prisma.$disconnect()
-    res.status(201).json({ token, userId: user.id })
+    res.status(201).json({ token, userId: String(user.id) })
   } catch (error: any) {
     await prisma.$disconnect()
     res.status(500).json({ error: error.message })

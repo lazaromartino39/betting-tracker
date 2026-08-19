@@ -1,7 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { prisma } from '@/lib/prisma'
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -15,16 +17,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    console.log('Signup attempt:', { email, username })
-
-    const existing = await prisma.user.findFirst({
-      where: { OR: [{ email }, { username }] },
-    })
-
-    if (existing) {
-      return res.status(409).json({ error: 'Email or username already exists' })
-    }
-
     const hashedPassword = await bcrypt.hash(password, 10)
 
     const user = await prisma.user.create({
@@ -41,13 +33,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       { expiresIn: '7d' }
     )
 
+    await prisma.$disconnect()
     res.status(201).json({ token, userId: user.id })
   } catch (error: any) {
-    console.error('Signup error:', error)
-    res.status(500).json({
-      error: 'Signup failed',
-      details: error.message,
-      code: error.code
-    })
+    await prisma.$disconnect()
+    res.status(500).json({ error: error.message })
   }
 }

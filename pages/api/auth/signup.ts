@@ -29,7 +29,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const user = await prisma.user.create({
       data: {
-        id: Math.random().toString(36).substr(2, 9),
         email,
         username,
         password: hashedPassword,

@@ -52,25 +52,24 @@ export default function Navbar({ isLoggedIn = false, username = 'jdbets' }: Navb
           </div>
         </Link>
 
-        {!isHomePage && !isAuthPage && isLoggedIn && (
-          <div style={{ display: 'flex', gap: '28px' }}>
-            {navLinks.map(link => (
-              <Link key={link.href} href={link.href}>
-                <span style={{
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  color: isActive(link.href) ? '#F2F1EE' : '#98979C',
-                  paddingBottom: '6px',
-                  borderBottom: `2px solid ${isActive(link.href) ? '#E4342F' : 'transparent'}`,
-                  transition: 'all 0.2s',
-                }}>
-                  {link.label}
-                </span>
-              </Link>
-            ))}
-          </div>
-        )}
+        {/* Always show nav links */}
+        <div style={{ display: 'flex', gap: '28px' }}>
+          {navLinks.map(link => (
+            <Link key={link.href} href={link.href}>
+              <span style={{
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 600,
+                color: isActive(link.href) ? '#F2F1EE' : '#98979C',
+                paddingBottom: '6px',
+                borderBottom: `2px solid ${isActive(link.href) ? '#E4342F' : 'transparent'}`,
+                transition: 'all 0.2s',
+              }}>
+                {link.label}
+              </span>
+            </Link>
+          ))}
+        </div>
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>

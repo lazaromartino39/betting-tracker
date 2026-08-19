@@ -40,6 +40,17 @@ export default function Signin() {
     }
   }
 
+  const handleGoogleSignin = () => {
+    // Google OAuth flow
+    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
+    if (!clientId) {
+      setError('Google OAuth not configured')
+      return
+    }
+    const redirectUri = `${window.location.origin}/api/auth/google/callback`
+    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=openid+profile+email`
+  }
+
   return (
     <div style={{ minHeight: '100vh', background: '#0B0B0C', color: '#F2F1EE' }}>
       <Navbar isLoggedIn={false} />
@@ -250,6 +261,7 @@ export default function Signin() {
 
               <button
                 type="button"
+                onClick={handleGoogleSignin}
                 style={{
                   cursor: 'pointer',
                   textAlign: 'center',
@@ -262,7 +274,7 @@ export default function Signin() {
                   color: '#F2F1EE',
                 }}
               >
-                Continue with Google
+                🔵 Continue with Google
               </button>
             </form>
           </div>

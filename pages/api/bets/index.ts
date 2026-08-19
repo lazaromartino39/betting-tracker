@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { PrismaClient } from '@prisma/client'
 import jwt from 'jsonwebtoken'
-
-const prisma = new PrismaClient()
+import { prisma } from '@/lib/prisma'
 
 function getTokenFromRequest(req: NextApiRequest): string | null {
   const token = req.headers.authorization?.split(' ')[1]

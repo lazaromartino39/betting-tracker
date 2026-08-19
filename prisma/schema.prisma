@@ -1,0 +1,127 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  username  String     @unique
+  password  String
+  name      String?
+  avatar    String?
+  bio       String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  bets      Bet[]
+  followers Relationship[] @relation("follower")
+  following Relationship[] @relation("following")
+  groups    GroupMember[]
+  posts     Post[]
+  likes     Like[]
+}
+
+model Relationship {
+  id          String   @id @default(cuid())
+  followerId  String
+  follower    User     @relation("follower", fields: [followerId], references: [id], onDelete: Cascade)
+  followingId String
+  following   User     @relation("following", fields: [followingId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@unique([followerId, followingId])
+}
+
+model Group {
+  id          String        @id @default(cuid())
+  name        String
+  description String?
+  image       String?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  members GroupMember[]
+  posts   Post[]
+}
+
+model GroupMember {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  groupId   String
+  group     Group    @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, groupId])
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  content   String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  groupId   String?
+  group     Group?   @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bets  Bet[]
+  likes Like[]
+}
+
+model Like {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, postId])
+}
+
+model Bet {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId          String?
+  post            Post?    @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  sport           String   // NFL, NBA, MLB, etc.
+  league          String   // league identifier
+  event           String   // event name/description
+  eventId         String   // from Odds API
+  betType         String   // moneyline, spread, over_under
+  selection       String   // team/outcome selected
+  odds            Float
+  wagerAmount     Float
+  potentialWin    Float
+
+  status          String   @default("pending") // pending, won, lost, push
+  oddsAtTime      String?  // JSON snapshot of odds when placed
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  resultTime      DateTime?
+}
+
+model OddsSnapshot {
+  id            String   @id @default(cuid())
+  eventId       String
+  sport         String
+  league        String
+  eventName     String
+  startTime     DateTime
+  oddsData      String   // JSON of all bookmaker odds
+  createdAt     DateTime @default(now())
+
+  @@index([eventId, createdAt])
+}

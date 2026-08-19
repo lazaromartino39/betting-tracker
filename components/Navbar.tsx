@@ -15,6 +15,7 @@ export default function Navbar({ isLoggedIn = false, username = 'jdbets' }: Navb
     { label: 'Dashboard', href: '/dashboard', page: 'dashboard' },
     { label: 'Live Odds', href: '/odds', page: 'odds' },
     { label: 'Social', href: '/feed', page: 'feed' },
+    { label: 'Groups', href: '/groups', page: 'groups' },
     { label: 'Analytics', href: '/analytics', page: 'analytics' },
   ]
 

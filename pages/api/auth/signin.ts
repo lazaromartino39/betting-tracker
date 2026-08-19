@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { PrismaClient } from '@prisma/client'
-
-const prisma = new PrismaClient()
+import { createClient } from '@supabase/supabase-js'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -17,23 +15,38 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    const user = await prisma.user.findUnique({ where: { email } })
+    const supabaseUrl = 'https://yxptbsqclewafboygpzu.supabase.co'
+    const supabaseKey = process.env.SUPABASE_KEY || ''
 
-    if (!user || !(await bcrypt.compare(password, user.password))) {
-      await prisma.$disconnect()
+    if (!supabaseKey) {
+      return res.status(500).json({ error: 'Database not configured' })
+    }
+
+    const supabase = createClient(supabaseUrl, supabaseKey)
+
+    const { data, error } = await supabase
+      .from('User')
+      .select('*')
+      .eq('email', email)
+      .single()
+
+    if (error || !data) {
+      return res.status(401).json({ error: 'Invalid email or password' })
+    }
+
+    const isValid = await bcrypt.compare(password, data.password)
+    if (!isValid) {
       return res.status(401).json({ error: 'Invalid email or password' })
     }
 
     const token = jwt.sign(
-      { userId: String(user.id), email: user.email },
+      { userId: data.id, email: data.email },
       process.env.JWT_SECRET || 'secret',
       { expiresIn: '7d' }
     )
 
-    await prisma.$disconnect()
-    res.json({ token, userId: String(user.id) })
+    res.json({ token, userId: data.id })
   } catch (error: any) {
-    await prisma.$disconnect()
     res.status(500).json({ error: error.message })
   }
 }

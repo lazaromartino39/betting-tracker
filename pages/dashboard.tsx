@@ -58,23 +58,29 @@ export default function Dashboard() {
   if (loading) return <div className="flex items-center justify-center min-h-screen">Loading...</div>
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-white shadow">
+    <div className="min-h-screen bg-gray-900">
+      <nav className="bg-gray-800 border-b-4 border-red-600">
         <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-          <Link href="/dashboard" className="text-2xl font-bold text-blue-600">
-            Betting Tracker
+          <Link href="/dashboard" className="text-3xl font-black text-red-600">
+            🎯 PICKIT TRACKER
           </Link>
-          <div className="space-x-4">
-            <Link href="/odds" className="text-gray-600 hover:text-gray-900">
+          <div className="space-x-4 flex items-center">
+            <Link href="/odds" className="text-gray-300 hover:text-white font-bold">
               Live Odds
             </Link>
-            <Link href="/groups" className="text-gray-600 hover:text-gray-900">
+            <Link href="/groups" className="text-gray-300 hover:text-white font-bold">
               Groups
             </Link>
-            <Link href="/profile" className="text-gray-600 hover:text-gray-900">
+            <Link href="/leaderboard" className="text-gray-300 hover:text-white font-bold">
+              Leaderboard
+            </Link>
+            <Link href="/pickitbros" className="text-red-400 hover:text-red-300 font-bold border-2 border-red-600 px-3 py-1 rounded">
+              PickIt Bros
+            </Link>
+            <Link href="/profile/edit" className="text-gray-300 hover:text-white font-bold">
               Profile
             </Link>
-            <button onClick={handleLogout} className="text-gray-600 hover:text-gray-900">
+            <button onClick={handleLogout} className="text-gray-300 hover:text-white font-bold">
               Logout
             </button>
           </div>
@@ -83,72 +89,72 @@ export default function Dashboard() {
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900">Welcome, {user?.username}!</h1>
-          <p className="text-gray-600 mt-2">Track your bets and compete with friends</p>
+          <h1 className="text-4xl font-black text-white">Welcome, {user?.username}! 🏆</h1>
+          <p className="text-gray-400 mt-2 font-bold">Make championship picks and dominate</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <div className="bg-white p-6 rounded-lg shadow">
-            <p className="text-gray-600 text-sm">Total Bets</p>
-            <p className="text-3xl font-bold text-gray-900">{bets.length}</p>
+          <div className="bg-gray-800 border-2 border-red-600 p-6 rounded-lg">
+            <p className="text-gray-400 text-sm font-bold">Total Bets</p>
+            <p className="text-4xl font-black text-white">{bets.length}</p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <p className="text-gray-600 text-sm">Won</p>
-            <p className="text-3xl font-bold text-green-600">{bets.filter(b => b.status === 'won').length}</p>
+          <div className="bg-gray-800 border-2 border-green-600 p-6 rounded-lg">
+            <p className="text-gray-400 text-sm font-bold">Won ✅</p>
+            <p className="text-4xl font-black text-green-600">{bets.filter(b => b.status === 'won').length}</p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <p className="text-gray-600 text-sm">Lost</p>
-            <p className="text-3xl font-bold text-red-600">{bets.filter(b => b.status === 'lost').length}</p>
+          <div className="bg-gray-800 border-2 border-red-600 p-6 rounded-lg">
+            <p className="text-gray-400 text-sm font-bold">Lost ❌</p>
+            <p className="text-4xl font-black text-red-600">{bets.filter(b => b.status === 'lost').length}</p>
           </div>
-          <div className="bg-white p-6 rounded-lg shadow">
-            <p className="text-gray-600 text-sm">Total Wagered</p>
-            <p className="text-3xl font-bold text-gray-900">${bets.reduce((sum, b) => sum + b.wagerAmount, 0).toFixed(2)}</p>
+          <div className="bg-gray-800 border-2 border-yellow-600 p-6 rounded-lg">
+            <p className="text-gray-400 text-sm font-bold">Total Wagered</p>
+            <p className="text-4xl font-black text-yellow-400">${bets.reduce((sum, b) => sum + b.wagerAmount, 0).toFixed(2)}</p>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow overflow-hidden">
-          <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-            <h2 className="text-xl font-bold text-gray-900">Your Recent Bets</h2>
-            <Link href="/place-bet" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-              Place Bet
+        <div className="bg-gray-800 rounded-lg border-2 border-red-600 overflow-hidden">
+          <div className="px-6 py-4 border-b-2 border-red-600 flex justify-between items-center bg-gray-900">
+            <h2 className="text-2xl font-black text-white">Your Recent Bets</h2>
+            <Link href="/place-bet" className="bg-green-600 text-white px-6 py-2 rounded font-bold hover:bg-green-700">
+              ➕ Place Bet
             </Link>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 border-b">
+              <thead className="bg-gray-900 border-b-2 border-red-600">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Event</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Selection</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Odds</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Wager</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Status</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-gray-700">Date</th>
+                  <th className="px-6 py-3 text-left text-sm font-black text-red-600">Event</th>
+                  <th className="px-6 py-3 text-left text-sm font-black text-red-600">Selection</th>
+                  <th className="px-6 py-3 text-left text-sm font-black text-red-600">Odds</th>
+                  <th className="px-6 py-3 text-left text-sm font-black text-red-600">Wager</th>
+                  <th className="px-6 py-3 text-left text-sm font-black text-red-600">Status</th>
+                  <th className="px-6 py-3 text-left text-sm font-black text-red-600">Date</th>
                 </tr>
               </thead>
-              <tbody className="divide-y">
+              <tbody className="divide-y divide-gray-700">
                 {bets.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-4 text-center text-gray-500">
-                      No bets yet. <Link href="/place-bet" className="text-blue-600">Place your first bet</Link>
+                    <td colSpan={6} className="px-6 py-8 text-center text-gray-500">
+                      No bets yet. <Link href="/place-bet" className="text-green-400 font-bold hover:text-green-300">Place your first championship pick!</Link>
                     </td>
                   </tr>
                 ) : (
                   bets.map(bet => (
-                    <tr key={bet.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 text-sm text-gray-900">{bet.event}</td>
-                      <td className="px-6 py-4 text-sm text-gray-900">{bet.selection}</td>
-                      <td className="px-6 py-4 text-sm text-gray-900">{bet.odds}</td>
-                      <td className="px-6 py-4 text-sm text-gray-900">${bet.wagerAmount}</td>
+                    <tr key={bet.id} className="hover:bg-gray-700 transition">
+                      <td className="px-6 py-4 text-sm text-white font-bold">{bet.event}</td>
+                      <td className="px-6 py-4 text-sm text-red-400 font-bold">{bet.selection}</td>
+                      <td className="px-6 py-4 text-sm text-green-400 font-black">{bet.odds}</td>
+                      <td className="px-6 py-4 text-sm text-yellow-400 font-bold">${bet.wagerAmount}</td>
                       <td className="px-6 py-4 text-sm">
-                        <span className={`px-2 py-1 rounded text-xs font-medium ${
-                          bet.status === 'won' ? 'bg-green-100 text-green-800' :
-                          bet.status === 'lost' ? 'bg-red-100 text-red-800' :
-                          'bg-yellow-100 text-yellow-800'
+                        <span className={`px-3 py-1 rounded text-xs font-black ${
+                          bet.status === 'won' ? 'bg-green-600 text-white' :
+                          bet.status === 'lost' ? 'bg-red-600 text-white' :
+                          'bg-yellow-600 text-white'
                         }`}>
-                          {bet.status}
+                          {bet.status.toUpperCase()}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm text-gray-500">{new Date(bet.createdAt).toLocaleDateString()}</td>
+                      <td className="px-6 py-4 text-sm text-gray-400">{new Date(bet.createdAt).toLocaleDateString()}</td>
                     </tr>
                   ))
                 )}

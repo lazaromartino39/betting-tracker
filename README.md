@@ -131,18 +131,43 @@ betting-tracker/
 ### User
 - `GET /api/user/me` — Get current user profile
 
-## Next Features to Build
+## ✅ Complete Feature List
 
-- [ ] Follow users / user profiles
-- [ ] Create and manage groups
-- [ ] Social posts about bets
-- [ ] Like/comment on posts
-- [ ] Bet sharing
-- [ ] Leaderboards
-- [ ] Mobile app with React Native
-- [ ] Notifications
-- [ ] Live odds websockets
-- [ ] Bet insights & analytics
+### Web Platform
+- ✅ User authentication & profiles with stats
+- ✅ Follow/unfollow system
+- ✅ Bet tracking & management
+- ✅ Social posts & feed
+- ✅ Like system on posts
+- ✅ Groups creation & management
+- ✅ Leaderboards (by win rate, most wins, most bets)
+- ✅ Live odds from 250+ sportsbooks
+- ✅ Bet analytics & insights
+- ✅ WebSocket for real-time odds updates
+- ✅ Dashboard with comprehensive stats
+- ✅ Profile pages with user history
+
+### Mobile App (React Native)
+- ✅ iOS & Android support
+- ✅ User authentication
+- ✅ Dashboard with stats
+- ✅ Place bets interface
+- ✅ Live odds viewer
+- ✅ Social feed
+- ✅ User profile
+- ✅ State management with Zustand
+- ✅ Secure storage for tokens
+
+### Future Enhancements
+- [ ] Push notifications
+- [ ] Offline support (mobile)
+- [ ] Dark mode
+- [ ] Biometric authentication
+- [ ] Deep linking
+- [ ] Share picks to social media
+- [ ] Bet parlays
+- [ ] Prediction markets
+- [ ] Advanced analytics & AI picks
 
 ## Troubleshooting
 

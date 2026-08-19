@@ -16,13 +16,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     const supabaseUrl = 'https://yxptbsqclewafboygpzu.supabase.co'
-    const supabaseKey = process.env.SUPABASE_KEY || ''
+    // Use service role key to bypass RLS for signup
+    const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_KEY || ''
 
     if (!supabaseKey) {
       return res.status(500).json({ error: 'Database not configured' })
     }
 
-    const supabase = createClient(supabaseUrl, supabaseKey)
+    const supabase = createClient(supabaseUrl, supabaseKey, {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    })
 
     const hashedPassword = await bcrypt.hash(password, 10)
 

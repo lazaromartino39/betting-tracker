@@ -1,13 +1,17 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 
-export default function SignIn() {
+export default function Signin() {
   const router = useRouter()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [formData, setFormData] = useState({ email: '', password: '' })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -18,70 +22,251 @@ export default function SignIn() {
       const res = await fetch('/api/auth/signin', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(formData),
       })
 
-      const data = await res.json()
-
       if (!res.ok) {
-        setError(data.error || 'Sign in failed')
-      } else {
-        localStorage.setItem('token', data.token)
-        router.push('/dashboard')
+        const data = await res.json()
+        throw new Error(data.error || 'Signin failed')
       }
+
+      const data = await res.json()
+      localStorage.setItem('token', data.token)
+      router.push('/dashboard')
     } catch (err) {
-      setError('An error occurred')
+      setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-red-900 to-gray-900 flex items-center justify-center py-12 px-4">
-      <div className="max-w-md w-full bg-gray-800 border-4 border-red-600 rounded-lg shadow-lg p-8">
-        <h1 className="text-4xl font-black text-red-600 mb-2 text-center">🎯 PICKIT</h1>
-        <h2 className="text-3xl font-bold text-white mb-6 text-center">Sign In</h2>
+    <div style={{ minHeight: '100vh', background: '#0B0B0C', color: '#F2F1EE' }}>
+      <Navbar isLoggedIn={false} />
 
-        {error && <div className="mb-4 p-4 bg-red-600 text-white rounded-lg font-bold">{error}</div>}
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-bold text-gray-300">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="mt-1 w-full px-4 py-2 border-2 border-red-600 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
-            />
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1.1fr 1fr',
+        minHeight: 'calc(100vh - 72px)',
+      }}>
+        {/* LEFT SIDE */}
+        <div style={{
+          position: 'relative',
+          background: 'radial-gradient(circle at 30% 20%, rgba(228,52,47,0.22), transparent 55%), radial-gradient(circle at 80% 80%, rgba(22,193,114,0.18), transparent 50%), #0B0B0C',
+          padding: '64px',
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+        }}>
+          <div style={{ fontFamily: "'Anton', sans-serif", fontSize: '44px', lineHeight: 1.05, maxWidth: '440px' }}>
+            WELCOME BACK<br />
+            <span style={{ color: '#16C172' }}>SHARP BETTORS.</span>
           </div>
 
-          <div>
-            <label className="block text-sm font-bold text-gray-300">Password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="mt-1 w-full px-4 py-2 border-2 border-red-600 bg-gray-700 text-white rounded-lg focus:ring-2 focus:ring-red-600 focus:border-transparent"
-            />
+          <div style={{ marginTop: '40px', display: 'flex', flexDirection: 'column', gap: '16px', maxWidth: '380px' }}>
+            <div style={{
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.1)',
+              borderRadius: '10px',
+              padding: '18px 20px',
+            }}>
+              <div style={{ fontSize: '14px', color: '#c9c8cc', lineHeight: 1.5 }}>
+                "The only thing I needed to start crushing. Easy to use, real money tracking."
+              </div>
+              <div style={{ marginTop: '10px', fontSize: '13px', color: '#98979C', fontWeight: 600 }}>
+                — fadethepublic
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '14px' }}>
+              <div style={{
+                flex: 1,
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '10px',
+                padding: '16px',
+                textAlign: 'center',
+              }}>
+                <div style={{ fontFamily: "'Anton', sans-serif", fontSize: '24px', color: '#16C172' }}>
+                  128K+
+                </div>
+                <div style={{ fontSize: '12px', color: '#98979C' }}>Total Bets</div>
+              </div>
+              <div style={{
+                flex: 1,
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '10px',
+                padding: '16px',
+                textAlign: 'center',
+              }}>
+                <div style={{ fontFamily: "'Anton', sans-serif", fontSize: '24px', color: '#E4342F' }}>
+                  54.2%
+                </div>
+                <div style={{ fontSize: '12px', color: '#98979C' }}>Win Rate</div>
+              </div>
+            </div>
           </div>
+        </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-red-600 text-white py-3 rounded-lg font-black hover:bg-red-700 disabled:opacity-50 transition text-lg"
-          >
-            {loading ? 'Signing in...' : '🎯 SIGN IN'}
-          </button>
-        </form>
+        {/* RIGHT SIDE */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '48px',
+        }}>
+          <div style={{ width: '100%', maxWidth: '380px' }}>
+            <div style={{
+              display: 'flex',
+              background: '#141416',
+              border: '1px solid rgba(255,255,255,0.08)',
+              borderRadius: '10px',
+              padding: '4px',
+              marginBottom: '28px',
+            }}>
+              <div style={{
+                flex: 1,
+                textAlign: 'center',
+                padding: '11px',
+                borderRadius: '7px',
+                cursor: 'pointer',
+                fontWeight: 700,
+                fontSize: '14px',
+                background: '#E4342F',
+                color: '#0B0B0C',
+              }}>
+                Log In
+              </div>
+              <Link href="/signup">
+                <div style={{
+                  flex: 1,
+                  textAlign: 'center',
+                  padding: '11px',
+                  borderRadius: '7px',
+                  cursor: 'pointer',
+                  fontWeight: 700,
+                  fontSize: '14px',
+                  color: '#98979C',
+                }}>
+                  Sign Up
+                </div>
+              </Link>
+            </div>
 
-        <p className="mt-4 text-center text-sm text-gray-400">
-          Don't have an account?{' '}
-          <Link href="/signup" className="text-green-400 hover:text-green-300 font-bold">
-            Create one
-          </Link>
-        </p>
+            <div style={{ fontFamily: "'Anton', sans-serif", fontSize: '26px', marginBottom: '6px' }}>
+              Welcome back
+            </div>
+            <div style={{ color: '#98979C', fontSize: '14px', marginBottom: '26px' }}>
+              Log in to see your latest bets and stats.
+            </div>
+
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              {error && (
+                <div style={{
+                  background: 'rgba(228,52,47,0.15)',
+                  color: '#E4342F',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  fontSize: '13px',
+                }}>
+                  {error}
+                </div>
+              )}
+
+              <div>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: '#c9c8cc', marginBottom: '6px' }}>
+                  Email
+                </div>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="you@email.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  style={{
+                    width: '100%',
+                    background: '#141416',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    borderRadius: '8px',
+                    padding: '13px 14px',
+                    color: '#F2F1EE',
+                    fontSize: '14px',
+                    fontFamily: 'inherit',
+                  }}
+                />
+              </div>
+
+              <div>
+                <div style={{ fontSize: '13px', fontWeight: 600, color: '#c9c8cc', marginBottom: '6px' }}>
+                  Password
+                </div>
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="••••••••"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
+                  style={{
+                    width: '100%',
+                    background: '#141416',
+                    border: '1px solid rgba(255,255,255,0.12)',
+                    borderRadius: '8px',
+                    padding: '13px 14px',
+                    color: '#F2F1EE',
+                    fontSize: '14px',
+                    fontFamily: 'inherit',
+                  }}
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                style={{
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  marginTop: '6px',
+                  background: '#E4342F',
+                  color: '#0B0B0C',
+                  fontWeight: 700,
+                  fontSize: '15px',
+                  padding: '14px',
+                  borderRadius: '8px',
+                  border: 'none',
+                  opacity: loading ? 0.6 : 1,
+                }}
+              >
+                {loading ? 'Logging in...' : 'Log In'}
+              </button>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '6px 0', color: '#66656a', fontSize: '12px' }}>
+                <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
+                OR
+                <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
+              </div>
+
+              <button
+                type="button"
+                style={{
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  border: '1px solid rgba(255,255,255,0.14)',
+                  fontWeight: 600,
+                  fontSize: '14px',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  background: 'transparent',
+                  color: '#F2F1EE',
+                }}
+              >
+                Continue with Google
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </div>
   )

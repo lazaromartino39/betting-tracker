@@ -1,23 +1,97 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-html,
-body {
-  padding: 0;
+* {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Source Sans Pro',
-    sans-serif;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background: #0B0B0C;
+  color: #F2F1EE;
+  font-family: 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
-  color: inherit;
+  color: #16C172;
   text-decoration: none;
 }
 
-* {
-  box-sizing: border-box;
+a:hover {
+  color: #1fe085;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #2A2A2D;
+  border-radius: 6px;
+}
+
+@keyframes livePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+.live-pulse {
+  animation: livePulse 1.6s infinite;
+}
+
+.btn-primary {
+  background: #E4342F;
+  color: #0B0B0C;
+  font-weight: 700;
+  padding: 13px 22px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  border: 1px solid rgba(255,255,255,0.18);
+  background: transparent;
+  color: #F2F1EE;
+  font-weight: 700;
+  padding: 13px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.card {
+  background: #141416;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 22px;
+}
+
+.badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 100px;
+  display: inline-block;
+}
+
+.badge-win {
+  background: rgba(22,193,114,0.15);
+  color: #16C172;
+}
+
+.badge-loss {
+  background: rgba(228,52,47,0.15);
+  color: #E4342F;
+}
+
+.badge-pending {
+  background: rgba(255,255,255,0.08);
+  color: #9B9B9C;
 }

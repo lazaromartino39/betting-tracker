@@ -15,6 +15,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    console.log('Signin attempt:', { email })
+
     const user = await prisma.user.findUnique({ where: { email } })
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
@@ -28,8 +30,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     )
 
     res.json({ token, userId: user.id })
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'An error occurred' })
+  } catch (error: any) {
+    console.error('Signin error:', error)
+    res.status(500).json({
+      error: 'Signin failed',
+      details: error.message,
+      code: error.code
+    })
   }
 }

@@ -15,6 +15,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
+    console.log('Signup attempt:', { email, username })
+
     const existing = await prisma.user.findFirst({
       where: { OR: [{ email }, { username }] },
     })
@@ -27,6 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const user = await prisma.user.create({
       data: {
+        id: Math.random().toString(36).substr(2, 9),
         email,
         username,
         password: hashedPassword,
@@ -40,8 +43,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     )
 
     res.status(201).json({ token, userId: user.id })
-  } catch (error) {
-    console.error(error)
-    res.status(500).json({ error: 'An error occurred' })
+  } catch (error: any) {
+    console.error('Signup error:', error)
+    res.status(500).json({
+      error: 'Signup failed',
+      details: error.message,
+      code: error.code
+    })
   }
 }

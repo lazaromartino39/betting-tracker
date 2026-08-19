@@ -95,23 +95,38 @@ export default function Navbar({ isLoggedIn = false, username = 'jdbets' }: Navb
             </Link>
           </>
         ) : (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
-            <div style={{
-              width: '34px',
-              height: '34px',
-              borderRadius: '50%',
-              background: '#1D1D20',
-              border: '1px solid #16C172',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontFamily: "'Anton', sans-serif",
-              fontSize: '13px',
-              color: '#16C172',
-            }}>
-              {username.substring(0, 2).toUpperCase()}
-            </div>
-            <span style={{ fontSize: '14px', fontWeight: 600 }}>{username}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <Link href="/settings">
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '10px',
+                cursor: 'pointer',
+                padding: '8px 12px',
+                borderRadius: '6px',
+                transition: 'background 0.2s',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+              onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+              >
+                <div style={{
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '50%',
+                  background: '#1D1D20',
+                  border: '1px solid #16C172',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontFamily: "'Anton', sans-serif",
+                  fontSize: '13px',
+                  color: '#16C172',
+                }}>
+                  {username.substring(0, 2).toUpperCase()}
+                </div>
+                <span style={{ fontSize: '14px', fontWeight: 600 }}>{username}</span>
+              </div>
+            </Link>
           </div>
         )}
       </div>

@@ -1,9 +1,44 @@
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 
+interface User {
+  userId: string
+  username: string
+  email: string
+}
+
 export default function Dashboard() {
-  const username = 'jdbets'
-  const isLoggedIn = true
+  const router = useRouter()
+  const [user, setUser] = useState<User | null>(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    const userData = localStorage.getItem('user')
+
+    if (!token) {
+      router.push('/signin')
+      return
+    }
+
+    if (userData) {
+      try {
+        const parsed = JSON.parse(userData)
+        setUser(parsed)
+        setIsLoggedIn(true)
+      } catch {
+        router.push('/signin')
+      }
+    }
+  }, [router])
+
+  if (!user) {
+    return <div style={{ background: '#0B0B0C', minHeight: '100vh' }} />
+  }
+
+  const username = user.username
 
   const dashboardStats = [
     { label: 'Net Profit', value: '+$1,240', color: '#16C172' },

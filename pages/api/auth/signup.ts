@@ -47,12 +47,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const token = jwt.sign(
-      { userId: user.id, email: user.email },
+      { userId: user.id, email: user.email, username: user.username },
       process.env.JWT_SECRET || 'secret',
-      { expiresIn: '7d' }
+      { expiresIn: '30d' }
     )
 
-    res.status(201).json({ token, userId: user.id })
+    res.status(201).json({
+      token,
+      userId: user.id,
+      username: user.username,
+      email: user.email,
+    })
   } catch (error: any) {
     res.status(500).json({ error: error.message })
   }

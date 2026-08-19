@@ -32,6 +32,11 @@ export default function Signup() {
 
       const data = await res.json()
       localStorage.setItem('token', data.token)
+      localStorage.setItem('user', JSON.stringify({
+        userId: data.userId,
+        username: data.username,
+        email: data.email,
+      }))
       router.push('/dashboard')
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
@@ -51,14 +56,67 @@ export default function Signup() {
     window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=openid+profile+email`
   }
 
+  const liveOdds = [
+    { team: 'Chiefs', odd: '-110', move: '↓' },
+    { team: 'Bills', odd: '-110', move: '↑' },
+    { team: 'Lakers', odd: '+165', move: '↑' },
+    { team: 'Celtics', odd: '-190', move: '↓' },
+    { team: 'UFC 305', odd: '+145', move: '→' },
+  ]
+
   return (
-    <div style={{ minHeight: '100vh', background: '#0B0B0C', color: '#F2F1EE' }}>
+    <div style={{ minHeight: '100vh', background: '#0B0B0C', color: '#F2F1EE', position: 'relative', overflow: 'hidden' }}>
+      {/* Live Odds Ticker Background */}
+      <div style={{
+        position: 'absolute',
+        top: '72px',
+        left: 0,
+        right: 0,
+        bottom: 0,
+        opacity: 0.1,
+        pointerEvents: 'none',
+        background: 'linear-gradient(90deg, transparent, rgba(22,193,114,0.1), transparent)',
+        display: 'flex',
+        alignItems: 'center',
+        overflow: 'hidden',
+      }}>
+        <div style={{
+          display: 'flex',
+          gap: '40px',
+          animation: 'scroll 30s linear infinite',
+          whiteSpace: 'nowrap',
+        }}>
+          {[...Array(3)].map((_, i) => (
+            <div key={i} style={{ display: 'flex', gap: '40px' }}>
+              {liveOdds.map((odd, j) => (
+                <div key={j} style={{
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  color: '#16C172',
+                }}>
+                  {odd.team} {odd.odd} {odd.move}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+      `}</style>
+
       <Navbar isLoggedIn={false} />
 
       <div style={{
         display: 'grid',
         gridTemplateColumns: '1.1fr 1fr',
         minHeight: 'calc(100vh - 72px)',
+        position: 'relative',
+        zIndex: 10,
       }}>
         {/* LEFT SIDE */}
         <div style={{

@@ -6,6 +6,12 @@ interface GoogleSignInProps {
   onSuccess?: (token: string, user: any) => void
 }
 
+declare global {
+  interface Window {
+    google?: any
+  }
+}
+
 export default function GoogleSignIn({ onError, onSuccess }: GoogleSignInProps) {
   const router = useRouter()
 
@@ -18,7 +24,7 @@ export default function GoogleSignIn({ onError, onSuccess }: GoogleSignInProps) 
     document.head.appendChild(script)
 
     script.onload = () => {
-      if (window.google) {
+      if (typeof window !== 'undefined' && window.google) {
         window.google.accounts.id.initialize({
           client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '',
           callback: handleCredentialResponse,

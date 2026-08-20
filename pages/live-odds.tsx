@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 import Navbar from '@/components/Navbar'
 import Link from 'next/link'
 
@@ -31,15 +32,17 @@ interface OddsData {
   total: number
 }
 
-export default function Odds() {
+export default function LiveOdds() {
+  const router = useRouter()
   const [odds, setOdds] = useState<Game[]>([])
   const [loading, setLoading] = useState(true)
+  const [sport, setSport] = useState('upcoming')
 
   useEffect(() => {
     const fetchOdds = async () => {
       setLoading(true)
       try {
-        const response = await fetch(`/api/odds/real-odds?sport=upcoming`)
+        const response = await fetch(`/api/odds/real-odds?sport=${sport}`)
         const data: OddsData = await response.json()
         setOdds(data.events || [])
       } catch (error) {
@@ -52,11 +55,13 @@ export default function Odds() {
     fetchOdds()
     const interval = setInterval(fetchOdds, 30000)
     return () => clearInterval(interval)
-  }, [])
+  }, [sport])
+
+  const user = typeof window !== 'undefined' ? JSON.parse(localStorage.getItem('user') || '{}') : {}
 
   return (
     <div style={{ minHeight: '100vh', background: '#0B0B0C', color: '#F2F1EE', fontFamily: "'Inter', sans-serif" }}>
-      <Navbar isLoggedIn={false} />
+      <Navbar isLoggedIn={true} username={user.username || 'User'} />
 
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 32px' }}>
         <div style={{ fontFamily: "'Anton', sans-serif", fontSize: '30px', marginBottom: '20px' }}>
@@ -87,7 +92,13 @@ export default function Odds() {
           </div>
         ) : (
           <div>
-            {odds.map((game) => (
+            <div style={{ marginBottom: '24px' }}>
+              <span style={{ color: '#98979C', fontSize: '13px', marginRight: '16px' }}>
+                Total: {odds.length} games | Last updated: Now
+              </span>
+            </div>
+
+            {odds.map((game, idx) => (
               <div
                 key={game.id}
                 style={{
@@ -145,6 +156,7 @@ export default function Odds() {
 
                           const awayML = h2h?.outcomes?.[0]
                           const homeML = h2h?.outcomes?.[1]
+                          const awaySpread = spreads?.outcomes?.[0]
                           const homeSpread = spreads?.outcomes?.[1]
                           const totalOver = totals?.outcomes?.[0]
                           const totalUnder = totals?.outcomes?.[1]

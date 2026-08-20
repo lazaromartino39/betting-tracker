@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import Navbar from '@/components/Navbar'
+import FloatingOdds from '@/components/FloatingOdds'
 import Link from 'next/link'
 
 interface Outcome {
@@ -57,6 +58,7 @@ export default function Odds() {
   return (
     <div style={{ minHeight: '100vh', background: '#0B0B0C', color: '#F2F1EE', fontFamily: "'Inter', sans-serif" }}>
       <Navbar isLoggedIn={false} />
+      <FloatingOdds />
 
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 32px' }}>
         <div style={{ fontFamily: "'Anton', sans-serif", fontSize: '30px', marginBottom: '20px' }}>

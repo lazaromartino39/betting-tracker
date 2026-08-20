@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/Navbar'
 import RealOddsTicker from '@/components/RealOddsTicker'
+import FloatingOdds from '@/components/FloatingOdds'
 import Link from 'next/link'
 
 interface User {
@@ -79,6 +80,7 @@ export default function Dashboard() {
     <div style={{ minHeight: '100vh', background: '#0B0B0C', color: '#F2F1EE', fontFamily: "'Inter', sans-serif", position: 'relative', overflow: 'hidden' }}>
       <RealOddsTicker />
       <Navbar isLoggedIn={isLoggedIn} username={username} />
+      <FloatingOdds />
 
       <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '40px 32px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '28px', flexWrap: 'wrap', gap: '14px' }}>

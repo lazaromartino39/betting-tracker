@@ -1,9 +1,23 @@
+import { useEffect } from 'react'
 import Navbar from '@/components/Navbar'
+import RealOddsTicker from '@/components/RealOddsTicker'
+import GoogleSignIn from '@/components/GoogleSignIn'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 
 export default function Home() {
+  const router = useRouter()
   return (
-    <div style={{ minHeight: '100vh', background: '#0B0B0C', color: '#F2F1EE', fontFamily: "'Inter', sans-serif" }}>
+    <div style={{ minHeight: '100vh', background: '#0B0B0C', color: '#F2F1EE', fontFamily: "'Inter', sans-serif", position: 'relative', overflow: 'hidden' }}>
+      <RealOddsTicker />
+      <GoogleSignIn
+        onError={(err) => console.error(err)}
+        onSuccess={(token, user) => {
+          localStorage.setItem('token', token)
+          localStorage.setItem('user', JSON.stringify(user))
+          router.push('/dashboard')
+        }}
+      />
       <Navbar isLoggedIn={false} />
 
       {/* HERO */}

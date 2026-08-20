@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/Navbar'
-import LiveOddsTicker from '@/components/LiveOddsTicker'
+import RealOddsTicker from '@/components/RealOddsTicker'
 import GoogleSignIn from '@/components/GoogleSignIn'
 import Link from 'next/link'
 
@@ -50,7 +50,7 @@ export default function Signin() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#0B0B0C', color: '#F2F1EE', position: 'relative', overflow: 'hidden' }}>
-      <LiveOddsTicker />
+      <RealOddsTicker />
 
       <Navbar isLoggedIn={false} />
 
@@ -260,7 +260,15 @@ export default function Signin() {
                 <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
               </div>
 
-              {/* Google OAuth coming soon - configure in Google Cloud Console */}
+              <div id="google-signin-button" style={{ display: 'flex', justifyContent: 'center' }} />
+              <GoogleSignIn
+                onError={(err) => setError(err)}
+                onSuccess={(token, user) => {
+                  localStorage.setItem('token', token)
+                  localStorage.setItem('user', JSON.stringify(user))
+                  router.push('/dashboard')
+                }}
+              />
             </form>
           </div>
         </div>

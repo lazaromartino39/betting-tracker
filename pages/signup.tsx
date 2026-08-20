@@ -284,15 +284,7 @@ export default function Signup() {
                 <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
               </div>
 
-              <div id="google-signin-button" style={{ display: 'flex', justifyContent: 'center' }} />
-              <GoogleSignIn
-                onError={(err) => setError(err)}
-                onSuccess={(token, user) => {
-                  localStorage.setItem('token', token)
-                  localStorage.setItem('user', JSON.stringify(user))
-                  router.push('/dashboard')
-                }}
-              />
+              {/* Google OAuth coming soon */}
             </form>
           </div>
         </div>

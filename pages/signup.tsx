@@ -1,6 +1,8 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Navbar from '@/components/Navbar'
+import LiveOddsTicker from '@/components/LiveOddsTicker'
+import GoogleSignIn from '@/components/GoogleSignIn'
 import Link from 'next/link'
 
 export default function Signup() {
@@ -45,69 +47,10 @@ export default function Signup() {
     }
   }
 
-  const handleGoogleSignup = () => {
-    // Google OAuth flow
-    const clientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
-    if (!clientId) {
-      setError('Google OAuth not configured')
-      return
-    }
-    const redirectUri = `${window.location.origin}/api/auth/google/callback`
-    window.location.href = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code&scope=openid+profile+email`
-  }
-
-  const liveOdds = [
-    { team: 'Chiefs', odd: '-110', move: '↓' },
-    { team: 'Bills', odd: '-110', move: '↑' },
-    { team: 'Lakers', odd: '+165', move: '↑' },
-    { team: 'Celtics', odd: '-190', move: '↓' },
-    { team: 'UFC 305', odd: '+145', move: '→' },
-  ]
 
   return (
     <div style={{ minHeight: '100vh', background: '#0B0B0C', color: '#F2F1EE', position: 'relative', overflow: 'hidden' }}>
-      {/* Live Odds Ticker Background */}
-      <div style={{
-        position: 'absolute',
-        top: '72px',
-        left: 0,
-        right: 0,
-        bottom: 0,
-        opacity: 0.1,
-        pointerEvents: 'none',
-        background: 'linear-gradient(90deg, transparent, rgba(22,193,114,0.1), transparent)',
-        display: 'flex',
-        alignItems: 'center',
-        overflow: 'hidden',
-      }}>
-        <div style={{
-          display: 'flex',
-          gap: '40px',
-          animation: 'scroll 30s linear infinite',
-          whiteSpace: 'nowrap',
-        }}>
-          {[...Array(3)].map((_, i) => (
-            <div key={i} style={{ display: 'flex', gap: '40px' }}>
-              {liveOdds.map((odd, j) => (
-                <div key={j} style={{
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  color: '#16C172',
-                }}>
-                  {odd.team} {odd.odd} {odd.move}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      </div>
-
-      <style>{`
-        @keyframes scroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-      `}</style>
+      <LiveOddsTicker />
 
       <Navbar isLoggedIn={false} />
 
@@ -341,23 +284,15 @@ export default function Signup() {
                 <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
               </div>
 
-              <button
-                type="button"
-                onClick={handleGoogleSignup}
-                style={{
-                  cursor: 'pointer',
-                  textAlign: 'center',
-                  border: '1px solid rgba(255,255,255,0.14)',
-                  fontWeight: 600,
-                  fontSize: '14px',
-                  padding: '12px',
-                  borderRadius: '8px',
-                  background: 'transparent',
-                  color: '#F2F1EE',
+              <div id="google-signin-button" style={{ display: 'flex', justifyContent: 'center' }} />
+              <GoogleSignIn
+                onError={(err) => setError(err)}
+                onSuccess={(token, user) => {
+                  localStorage.setItem('token', token)
+                  localStorage.setItem('user', JSON.stringify(user))
+                  router.push('/dashboard')
                 }}
-              >
-                🔵 Continue with Google
-              </button>
+              />
             </form>
           </div>
         </div>

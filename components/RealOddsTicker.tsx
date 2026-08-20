@@ -27,7 +27,8 @@ export default function RealOddsTicker() {
   useEffect(() => {
     const fetchOdds = async () => {
       try {
-        const response = await fetch('/api/odds/real-odds?sport=upcoming')
+        // Use valid Odds API sport key (NFL by default)
+        const response = await fetch('/api/odds/real-odds?sport=americanfootball_nfl')
         const data = await response.json()
 
         if (data.events && data.events.length > 0) {

@@ -7,7 +7,23 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(500).json({ error: 'Odds API key not configured' })
     }
 
-    const { sport = 'upcoming' } = req.query
+    // Valid Odds API sport keys
+    const validSports = [
+      'americanfootball_nfl',
+      'basketball_nba',
+      'basketball_ncaa',
+      'soccer_epl',
+      'soccer_fifa_world_cup',
+      'mma_ufc',
+      'baseball_mlb',
+    ]
+
+    let sport = (req.query.sport as string) || 'americanfootball_nfl'
+
+    // Validate sport key
+    if (!validSports.includes(sport)) {
+      sport = 'americanfootball_nfl'
+    }
 
     // Fetch real odds from The Odds API
     const response = await fetch(

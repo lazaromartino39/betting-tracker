@@ -39,7 +39,7 @@ export default function Odds() {
     const fetchOdds = async () => {
       setLoading(true)
       try {
-        const response = await fetch(`/api/odds/real-odds?sport=upcoming`)
+        const response = await fetch(`/api/odds/real-odds?sport=americanfootball_nfl`)
         const data: OddsData = await response.json()
         setOdds(data.events || [])
       } catch (error) {
